@@ -1,0 +1,1 @@
+# fairdrive-nft-generator
