@@ -55,9 +55,7 @@ const Lightbox: FC<LightboxProps> = ({
         erc721Address: process.env.NEXT_PUBLIC_CONTRACT,
       });
       instance.setGatewayPostageBatchId();
-      instance.setGatewayUrlTemplate(
-        process.env.NEXT_PUBLIC_GATEWAYTEMPLATE
-      );
+      instance.setGatewayUrlTemplate(process.env.NEXT_PUBLIC_GATEWAYTEMPLATE);
       const addresses = await provider.send('eth_requestAccounts', []);
       setUserAdress(addresses[0]);
       const file = new File([imageResponse], 'image.jpg');
