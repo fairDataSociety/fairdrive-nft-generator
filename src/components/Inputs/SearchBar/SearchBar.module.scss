@@ -1,0 +1,18 @@
+.searchBar {
+  all: unset;
+  flex-grow: 1;
+  padding: 0px 10px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #28282b;
+}
+
+.searchBar:-webkit-autofill,
+.searchBar:-webkit-autofill:hover,
+.searchBar:-webkit-autofill:focus,
+.searchBar:-webkit-autofill:active {
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  transition: background-color 5000s ease-in-out 0s;
+  -webkit-text-fill-color: #28282b !important;
+}
