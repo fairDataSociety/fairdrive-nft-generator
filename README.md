@@ -6,10 +6,10 @@ Video demo: https://drive.google.com/file/d/18lDp77Q1ivPQxUD8iZEvsgSIpuJrKUXK/vi
 
 ### .env
 
-`NEXT_PUBLIC_FAIROSHOST` - FairOS gateway
-`NEXT_PUBLIC_GATEWAYURL` - Bee gateway
-`NEXT_PUBLIC_CONTRACT` - Nft contract
-`NEXT_PUBLIC_GATEWAYTEMPLATE` - Bee gateway template
+1. `NEXT_PUBLIC_FAIROSHOST` - FairOS gateway
+2. `NEXT_PUBLIC_GATEWAYURL` - Bee gateway
+3. `NEXT_PUBLIC_CONTRACT` - Nft contract
+4. `NEXT_PUBLIC_GATEWAYTEMPLATE` - Bee gateway template
 
 ## Run locally:
 Clone this repo and run.
