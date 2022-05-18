@@ -1,6 +1,5 @@
 import '@babel/polyfill';
 import { FC, useContext, useState, useEffect } from 'react';
-import FileSaver from 'file-saver';
 
 import PodContext from '@context/PodContext';
 
@@ -12,7 +11,7 @@ import SwarmNFT from 'swarm-nft/SwarmNFT.min';
 import { Bee } from '@ethersphere/bee-js';
 import { providers } from 'ethers';
 declare let window: any;
-const bee = new Bee('https://gateway-proxy-bee-8-0.gateway.ethswarm.org');
+const bee = new Bee(process.env.NEXT_PUBLIC_GATEWAYURL);
 
 interface LightboxProps {
   showLightbox: boolean;
@@ -53,11 +52,11 @@ const Lightbox: FC<LightboxProps> = ({
       const provider = new providers.Web3Provider(window.ethereum, 'any');
       const signer = provider.getSigner();
       const instance = new SwarmNFT(bee, provider, signer, {
-        erc721Address: '0xc5caC9F4610fb874F54aF5B12c19Cc5fECF75469',
+        erc721Address: process.env.NEXT_PUBLIC_CONTRACT,
       });
       instance.setGatewayPostageBatchId();
       instance.setGatewayUrlTemplate(
-        'https://gateway-proxy-bee-8-0.gateway.ethswarm.org/bzz/{reference}/'
+        process.env.NEXT_PUBLIC_GATEWAYTEMPLATE
       );
       const addresses = await provider.send('eth_requestAccounts', []);
       setUserAdress(addresses[0]);
