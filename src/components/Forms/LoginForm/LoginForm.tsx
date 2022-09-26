@@ -93,7 +93,7 @@ const LoginForm: FC = () => {
 
           <div className="my-6 text-center">
             <a
-              href="https://app.fairdrive.dev.fairdatasociety.org/register"
+              href="https://create.dev.fairdatasociety.org/#/register"
               target="_blank"
               rel="noreferrer"
               className="font-normal text-xs text-color-accents-purple-black"

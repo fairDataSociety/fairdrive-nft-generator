@@ -25,7 +25,7 @@ export const receiveFile = async (
   try {
     const writePath = directory === 'root' ? '/' : '/' + formatURL(directory);
 
-    const shareFileInfoResult = await axios.get('file/receive', {
+    const shareFileInfoResult = await axios.get('v2/file/receive', {
       params: {
         pod_name: podName,
         sharing_ref: reference,
@@ -47,7 +47,7 @@ export async function downloadFile(data: DownloadFileData): Promise<Blob> {
   formData.append('file_path', writePath + data.filename);
   formData.append('pod_name', data.podName);
 
-  const downloadFile = await axios.post('file/download', formData, {
+  const downloadFile = await axios.post('v2/file/download', formData, {
     responseType: 'blob',
   });
 
