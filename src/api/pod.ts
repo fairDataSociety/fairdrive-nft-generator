@@ -10,14 +10,14 @@ export interface PodFilesResponse {
 }
 
 export async function getPods(): Promise<GetPodResponse> {
-  return (await axios.get('v2/pod/ls')).data;
+  return (await axios.get('v1/pod/ls')).data;
 }
 
 export async function openPod(
   pod_name: string,
   password: string
 ): Promise<void> {
-  return await axios.post('v2/pod/open', {
+  return await axios.post('v1/pod/open', {
     pod_name,
     password,
   });
