@@ -1,0 +1,48 @@
+name: PR
+
+on:
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  build:
+    name: Pull Request Check
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Cache node modules
+      id: cache-nodemodules
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-node-modules
+      with:
+        # caching node_modules
+        path: node_modules
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+    - name: Install npm deps
+      if: steps.npm-cache.outputs.cache-hit != 'true'
+      run: npm ci --cache .npm
+    - name: install
+      run: npm install --legacy-peer-deps
+    - name: build
+      run: npm run build
+      env:
+        CI: false
