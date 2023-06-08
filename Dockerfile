@@ -29,6 +29,7 @@ ENV NEXT_PUBLIC_CONTRACT=$NEXT_PUBLIC_CONTRACT
 SHELL ["/bin/bash", "-eo", "pipefail", "-c"]
 RUN env |grep 'NEXT' > .env
 
+ENV NODE_OPTIONS=--openssl-legacy-provider
 RUN yarn build-static
 
 # Production image, copy all the files and run next
