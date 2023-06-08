@@ -27,6 +27,7 @@ ENV NEXT_PUBLIC_GATEWAYTEMPLATE=$NEXT_PUBLIC_GATEWAYTEMPLATE
 SHELL ["/bin/bash", "-eo", "pipefail", "-c"]
 RUN env |grep 'NEXT' > .env
 
+ENV NODE_OPTIONS=--openssl-legacy-provider
 RUN yarn build-static
 
 # Production image, copy all the files and run next
