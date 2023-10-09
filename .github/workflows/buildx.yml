@@ -11,8 +11,16 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name }}
     steps:
-      -
-        name: Set up QEMU
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: Set environment specific variables
+        uses: jnus/json-variables@v1.0
+        with:
+          scope: ${{ github.ref_name }}
+          configFile: '.github/workflows/variables.json'
+          secrets: '${{ toJson(secrets.github_token) }}'
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
       - name: Setup docker context for buildx
@@ -33,30 +41,12 @@ jobs:
         env:
           OWNER: '${{ env.REPO_NAME }}'
 
-      - name: set vars per branch
-        id: vars
-        run: |
-          if [ "$GITHUB_REF_NAME" == 'main' ]; then
-              echo "NEXT_PUBLIC_FAIROSHOST=https://fairos.fairdatasociety.org" >> "$GITHUB_ENV"
-              echo "NEXT_PUBLIC_GATEWAYURL=https://gateway.fairdatasociety.org" >> "$GITHUB_ENV"
-              echo "NEXT_PUBLIC_GATEWAYTEMPLATE=https://gateway.fairdatasociety.org/bzz/{reference}/" >> "$GITHUB_ENV"
-              echo "NEXT_PUBLIC_CONTRACT=0xc5caC9F4610fb874F54aF5B12c19Cc5fECF75469" >> "$GITHUB_ENV"
-              echo "NEXT_PUBLIC_NAME=Fairdrive NFT" >> "$GITHUB_ENV"
-          elif [ "$GITHUB_REF_NAME" == 'development' ]; then
-              echo "NEXT_PUBLIC_FAIROSHOST=https://fairos.dev.fairdatasociety.org" >> "$GITHUB_ENV"
-              echo "NEXT_PUBLIC_GATEWAYURL=https://gateway.fairdatasociety.org" >> "$GITHUB_ENV"
-              echo "NEXT_PUBLIC_GATEWAYTEMPLATE=https://gateway.fairdatasociety.org/bzz/{reference}/" >> "$GITHUB_ENV"
-              echo "NEXT_PUBLIC_CONTRACT=0xc5caC9F4610fb874F54aF5B12c19Cc5fECF75469" >> "$GITHUB_ENV"
-              echo "NEXT_PUBLIC_NAME=Fairdrive NFT" >> "$GITHUB_ENV"
-          fi
-
       - name: copy ca
         run: |
           sudo mkdir -p /etc/docker/certs.d/${{ secrets.REGISTRY_URL }}
           echo "${{ secrets.REGISTRY_CA }}" | sudo tee /etc/docker/certs.d/${{ secrets.REGISTRY_URL }}/ca.crt
 
-      -
-        name: Set up Docker Buildx
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
         with:
           endpoint: builders
@@ -66,21 +56,20 @@ jobs:
               insecure = true
               ca=["/etc/docker/certs.d/${{ secrets.REGISTRY_URL }}/ca.crt"]
 
-      -
-        name: Build and push
+      - uses: bilberrry-infra/docker-build-args-action@master
+        id: action
+        with:
+          includeVars: ${{ toJson(env) }}
+          includeSecrets: ${{ toJson(secrets) }}
+
+      - name: Build and push
         uses: docker/build-push-action@v4
         with:
           push: true
           platforms: |
             linux/amd64
-          build-args: |
-            "NEXT_PUBLIC_FAIROSHOST=${{ env.NEXT_PUBLIC_FAIROSHOST }}"
-            "NEXT_PUBLIC_GATEWAYURL=${{ env.NEXT_PUBLIC_GATEWAYURL }}"
-            "NEXT_PUBLIC_GATEWAYTEMPLATE=${{ env.NEXT_PUBLIC_GATEWAYTEMPLATE }}"
-            "NEXT_PUBLIC_NAME=${{ env.NEXT_PUBLIC_NAME }}"
-            "NEXT_PUBLIC_CONTRACT=${{ env.NEXT_PUBLIC_CONTRACT }}"
-            "PORT=80"
-          tags: ${{ secrets.REGISTRY_URL }}/${{ env.REPO_LC }}:${{ github.sha }}
+          build-args: ${{ steps.action.outputs.args }}
+          tags: ${{ secrets.REGISTRY_URL }}/${{ env.REPO_LC }}:${{ github.sha }},${{ secrets.REGISTRY_URL }}/${{ env.REPO_LC }}:${{ github.ref_name }}
           cache-from: type=registry,ref=${{ secrets.REGISTRY_URL }}/${{ env.REPO_LC }}:buildcache
           cache-to: type=registry,ref=${{ secrets.REGISTRY_URL }}/${{ env.REPO_LC }}:buildcache,mode=max
 

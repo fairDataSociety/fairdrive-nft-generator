@@ -1,0 +1,83 @@
+{
+  "Variables": [
+    {
+      "Name": "DEPLOYMENT",
+      "Value": ".",
+      "Scope": {
+        "Environment": [
+          "master",
+          "main",
+          "swarm"
+        ]
+      }
+    },
+    {
+      "Name": "DEPLOYMENT",
+      "Value": ".dev.",
+      "Scope": {
+        "Environment": [
+          "development"
+        ]
+      }
+    },
+    {
+      "Name": "DEPLOYMENT",
+      "Value": ".staging.",
+      "Scope": {
+        "Environment": [
+          "staging"
+        ]
+      }
+    },
+    {
+      "Name": "NEXT_PUBLIC_FAIROSHOST",
+      "Value": "https://fairos#{DEPLOYMENT}fairdatasociety.org",
+      "Scope": {
+        "Environment": [
+          "master",
+	  "main",
+	  "development"
+        ]
+      }
+    },
+    {  
+      "Name": "NEXT_PUBLIC_FAIROSHOST",
+      "Value": "https://fairos#{DEPLOYMENT}fairdatasociety.org",
+      "Scope": {
+        "Environment": [
+          "swarm"
+        ]
+      }
+    },
+    {  
+      "Name": "NEXT_PUBLIC_GATEWAYURL",
+      "Value": "https://gateway.fairdatasociety.org",
+      "Scope": {}
+    },
+    {  
+      "Name": "NEXT_PUBLIC_GATEWAYURL_TEMPLATE",
+      "Value": "https://gateway.fairdatasociety.org/bzz/{reference}/",
+      "Scope": {}
+    },
+    {
+      "Name": "NEXT_PUBLIC_CONTRACT",
+      "Value": "0xc5caC9F4610fb874F54aF5B12c19Cc5fECF75469",
+      "Scope": {}
+    },
+    {
+      "Name": "NEXT_PUBLIC_NAME",
+      "Value": "Fairdrive NFT",
+      "Scope": {}
+    },
+    {
+      "Name": "PURGE_URL",
+      "Value": "https://fairdrive#{DEPLOYMENT}fairdatasociety.org",
+      "Scope": {}
+    },
+    {
+      "Name": "SWARM_URL",
+      "Value": "https://gateway#{DEPLOYMENT}fairdatasociety.org/proxy/",
+      "Scope": {}
+    }
+  ]
+}
